@@ -1,9 +1,12 @@
 on:
   push:
-    branches: [main]
-  pull_request:
+    branches: 
+      - '**'
+      - '!main'
+    paths: 
+      - dev/**
 
-name: On Pull or Push Main
+name: On Pull Or Push To Dev All Branches Except Main
 
 jobs:
   terraform:
@@ -15,10 +18,12 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       TF_VERSION: ">=0.12"
+      TF_WORKSPACE: dev
 
     defaults:
       run:
         shell: bash
+        working-directory: ./dev
 
     steps:
       - name: Checkout
@@ -29,21 +34,27 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
-      - name: Terraform init
+      - name: Terraform Init
         id: init
         run: |
           terraform init
 
-      - name: Terraform validate
+      #- name: Terraform Select Workspace
+      #  id: workspace-select
+      #  run: terraform workspace select dev
+
+      - name: Terraform List Workspace
+        id: workspace-list
+        run: terraform workspace list
+        
+      - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
 
-      - name: Terraform plan
+      - name: Terraform Plan
         id: plan
         run: terraform plan -no-color
 
         # On push to "main", build or change infrastructure according to Terraform configuration files
-      - name: Terraform Apply
-        # if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
-        if: github.ref == 'refs/heads/"main"'
-        run: terraform apply -auto-approve -input=false
+      # - name: Terraform Apply
+      #   run: terraform apply -auto-approve -input=false
