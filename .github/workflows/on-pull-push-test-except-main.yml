@@ -1,11 +1,12 @@
 on:
   push:
     branches: 
-      - main
+      - '**'
+      - '!main'
     paths: 
-      - dev/**
+      - test/**
 
-name: On Push To Dev Workspace Only Main Branch
+name: On Pull Or Push To Test Workspace All Branches Except Main
 
 jobs:
   terraform:
@@ -17,12 +18,12 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       TF_VERSION: ">=0.12"
-      TF_WORKSPACE: dev
+      TF_WORKSPACE: test
 
     defaults:
       run:
         shell: bash
-        working-directory: ./dev
+        working-directory: ./test
 
     steps:
       - name: Checkout
@@ -49,8 +50,3 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color
-
-        # On push to "main", build or change infrastructure according to Terraform configuration files
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve -input=false

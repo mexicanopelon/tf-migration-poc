@@ -3,9 +3,9 @@ on:
     branches: 
       - main
     paths: 
-      - dev/**
+      - test/**
 
-name: On Push To Dev Workspace Only Main Branch
+name: On Push To Test Workspace Only Main Branch
 
 jobs:
   terraform:
@@ -17,12 +17,12 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       TF_VERSION: ">=0.12"
-      TF_WORKSPACE: dev
+      TF_WORKSPACE: test
 
     defaults:
       run:
         shell: bash
-        working-directory: ./dev
+        working-directory: ./test
 
     steps:
       - name: Checkout
