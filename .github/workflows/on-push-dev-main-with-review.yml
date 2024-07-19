@@ -85,7 +85,7 @@ jobs:
         uses: actions/download-artifact@v4
         if: github.ref == 'refs/heads/main'
         with:
-          name: terraform-plan-${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan
+          name: terraform-plan-${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}
           path: terraform-plan-${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan
   
       - name: Terraform Apply
