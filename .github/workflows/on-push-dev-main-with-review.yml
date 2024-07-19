@@ -78,7 +78,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./dev
 
     steps:          
       - name: Download Terraform Plan Artifact
