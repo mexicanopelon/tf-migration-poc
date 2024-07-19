@@ -60,6 +60,10 @@ jobs:
           path: dev/${{ github.sha }}.tfplan
           if-no-files-found: error
 
+      - name: Export GitHub TF Plan Job SHA to GitHub Output
+        id: export_sha
+        run: echo "TF_PLAN_SHA=${{ github.sha }}" >> $GITHUB_OUTPUT
+        
   TF_APPLY:
     name: 'Terraform Apply'
     runs-on: ubuntu-latest
@@ -79,19 +83,20 @@ jobs:
         working-directory: ./dev
 
     steps:          
-      # - name: Download Terraform Plan Artifact
-      #   uses: actions/download-artifact@v3.0.1
-      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      #   with:
-      #     name: terraform-plan-${{ github.sha }}
-      #     path: ${{ env.tf_working_dir }}/${{ github.sha }}.tfplan
+      - name: Download Terraform Plan Artifact
+        id: download
+        uses: actions/download-artifact@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: terraform-plan-${{ steps.export_sha.outputs.TF_PLAN_SHA }}
+          path: ${{ steps.export_sha.outputs.TF_PLAN_SHA }}.tfplan
   
       - name: Terraform Apply
         id: apply
         if: github.ref == 'refs/heads/main'
         run: |
           ls
-          terraform apply -auto-approve -input=false ${{ github.sha }}.tfplan
+          terraform apply -auto-approve -input=false ${{ steps.export_sha.outputs.TF_PLAN_SHA }}.tfplan
 
 
         # On push to "main", build or change infrastructure according to Terraform configuration files
