@@ -66,7 +66,7 @@ jobs:
       #     path: ${{ env.tf_working_dir }}/${{ github.sha }}.tfplan
   
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main'
         run: |
           ls dev
           terraform apply -auto-approve -input=false dev/${{ github.sha }}.tfplan
