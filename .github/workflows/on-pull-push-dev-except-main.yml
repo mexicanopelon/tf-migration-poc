@@ -49,12 +49,10 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
-
-      - name: Terraform Plan
         run: terraform plan -input=false -out=${{ github.sha }}.tfplan
 
       - name: Upload Terraform Plan Artifact
+        id: upload
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan-${{ github.sha }}
