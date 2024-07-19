@@ -85,15 +85,15 @@ jobs:
         uses: actions/download-artifact@v4
         if: github.ref == 'refs/heads/main'
         with:
-          name: terraform-plan-${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}
-          path: ${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan
+          name: terraform-plan-${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan
+          path: terraform-plan-${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan
   
       - name: Terraform Apply
         id: apply
         if: github.ref == 'refs/heads/main'
         run: |
           ls
-          terraform apply -auto-approve -input=false ${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan
+          terraform apply -auto-approve -input=false terraform-plan-${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan
 
 
         # On push to "main", build or change infrastructure according to Terraform configuration files
