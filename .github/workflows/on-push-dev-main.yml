@@ -48,9 +48,31 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        run: terraform plan -input=false -out=${{ github.sha }}.tfplan
+
+      - name: Upload Terraform Plan Artifact
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan-${{ github.sha }}
+          path: dev/${{ github.sha }}.tfplan
+          if-no-files-found: error
+
+      # - name: Download Terraform Plan Artifact
+      #   uses: actions/download-artifact@v3.0.1
+      #   if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      #   with:
+      #     name: terraform-plan-${{ github.sha }}
+      #     path: ${{ env.tf_working_dir }}/${{ github.sha }}.tfplan
+  
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: |
+          ls dev
+          terraform apply -auto-approve -input=false dev/${{ github.sha }}.tfplan
+
 
         # On push to "main", build or change infrastructure according to Terraform configuration files
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve -input=false
+      # - name: Terraform Apply
+      #   if: github.ref == 'refs/heads/main'
+      #   run: terraform apply -auto-approve -input=false
