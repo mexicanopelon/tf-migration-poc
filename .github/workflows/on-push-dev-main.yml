@@ -60,13 +60,13 @@ jobs:
 
       # - name: Download Terraform Plan Artifact
       #   uses: actions/download-artifact@v3.0.1
-      #   if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       #   with:
       #     name: terraform-plan-${{ github.sha }}
       #     path: ${{ env.tf_working_dir }}/${{ github.sha }}.tfplan
   
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           ls dev
           terraform apply -auto-approve -input=false dev/${{ github.sha }}.tfplan
