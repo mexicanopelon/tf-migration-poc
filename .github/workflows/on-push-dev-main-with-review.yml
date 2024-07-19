@@ -20,6 +20,8 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       TF_VERSION: ">=0.12"
       TF_WORKSPACE: dev
+    outputs:
+      TF_PLAN_SHA: ${{ github.sha }}
 
     defaults:
       run:
@@ -59,10 +61,6 @@ jobs:
           name: terraform-plan-${{ github.sha }}
           path: dev/${{ github.sha }}.tfplan
           if-no-files-found: error
-
-      - name: Export GitHub TF Plan Job SHA to GitHub Output
-        id: export_sha
-        run: echo "TF_PLAN_SHA=${{ github.sha }}" >> $GITHUB_OUTPUT
         
   TF_APPLY:
     name: 'Terraform Apply'
