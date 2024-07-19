@@ -95,7 +95,7 @@ jobs:
           ls
           cd terraform-plan-${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan
           ls
-          # terraform apply -auto-approve -input=false terraform-plan-${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan
+          terraform apply -auto-approve -input=false terraform-plan-${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan/${{ needs.TF_PLAN.outputs.TF_PLAN_SHA }}.tfplan
 
 
         # On push to "main", build or change infrastructure according to Terraform configuration files
