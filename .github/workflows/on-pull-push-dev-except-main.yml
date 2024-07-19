@@ -56,5 +56,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan-${{ github.sha }}
-          path: ${{ github.sha }}.tfplan
+          path: dev/${{ github.sha }}.tfplan
           if-no-files-found: error
