@@ -78,8 +78,26 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: ./dev
 
-    steps:          
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        id: init
+        run: |
+          terraform init
+
+      - name: Terraform List Workspace
+        id: workspace-list
+        run: terraform workspace list
+         
       - name: Download Terraform Plan Artifact
         id: download
         uses: actions/download-artifact@v4
