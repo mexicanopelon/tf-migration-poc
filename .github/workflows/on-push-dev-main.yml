@@ -66,6 +66,7 @@ jobs:
       #     path: ${{ env.tf_working_dir }}/${{ github.sha }}.tfplan
   
       - name: Terraform Apply
+        id: apply
         if: github.ref == 'refs/heads/main'
         run: |
           ls
